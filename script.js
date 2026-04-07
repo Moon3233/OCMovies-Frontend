@@ -1,3 +1,4 @@
+
 const API_BASE = 'http://localhost:8000/api/v1';
 
 const jsonHeaders = { Accept: 'application/json' };
@@ -36,6 +37,8 @@ function genreLabelFr(apiName) {
   return GENRE_LABEL_FR[apiName] || apiName;
 }
 
+// ——— Constantes de grilles (requêtes /titles/?genre=… ou tri par note) ———
+
 /** Catégorie 1 : section « Mystery » (titre fixe dans le HTML). */
 const CATEGORY1_API_GENRE = 'Mystery';
 
@@ -47,8 +50,12 @@ const CATEGORY_GRID_PAGE_SIZE = 6;
 /** Liste triée par note : on en demande 7 pour afficher les 6 films après le #1 (réservé au bloc « Meilleur film »). */
 const TOP_RATED_LIST_PAGE_SIZE = 7;
 
+/** Objet détail du film « vedette » (après GET /titles/:id), réutilisé pour la modale. */
 let bestFilmDetail = null;
 
+// ——— Utilitaires sécurité / affichage ———
+
+/** Échappe les caractères HTML pour les chaînes injectées en innerHTML (ex. métadonnées modale). */
 function esc(s) {
   if (s == null || s === '') return '';
   const el = document.createElement('div');
@@ -110,6 +117,7 @@ function formatMoney(n) {
   return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 }
 
+/** Construit le bloc HTML (lignes séparées par <br>) des infos modale : année, genres, durée, note, etc. */
 function buildMetaLines(m) {
   const genres = (m.genres || []).join(', ') || '—';
   const countries = (m.countries || []).join(', ') || '';
@@ -127,6 +135,7 @@ function buildMetaLines(m) {
   return lines.map((line) => esc(line)).join('<br>');
 }
 
+/** Remplit la modale à partir d’un objet détail API (même schéma que GET /titles/:id). */
 function fillModalFromDetail(m) {
   const poster = document.querySelector('.modal__poster');
   const wrap = document.querySelector('.modal__poster-wrap');
@@ -150,6 +159,7 @@ function fillModalFromDetail(m) {
   document.querySelector('.modal__cast').textContent = cast;
 }
 
+/** Met à jour le bloc « Meilleur film » (affiche + titre + description courte) après chargement API. */
 function populateBestFilm(m) {
   const poster = document.getElementById('best-film-poster');
   const wrap = poster.closest('.best-film__media');
@@ -168,9 +178,9 @@ function populateBestFilm(m) {
   document.getElementById('best-film-details-btn').disabled = false;
 }
 
+/** Retourne le film #1 par note IMDB (tri côté serveur, une seule page). */
 async function fetchTopRatedSummary() {
   const listUrl = `${API_BASE}/titles/?sort_by=-imdb_score&page_size=1`;
-  console.log('[Meilleur film] Liste (tri note décroissante, 1 résultat) →', listUrl);
 
   const res = await fetch(listUrl, { headers: jsonHeaders });
   if (!res.ok) {
@@ -179,16 +189,17 @@ async function fetchTopRatedSummary() {
   }
   const data = await res.json();
   const first = data.results && data.results[0];
-  console.log('[Meilleur film] 1er titre (liste) :', first || '(aucun)');
   return first || null;
 }
 
+/**
+ * Charge le meilleur film : liste triée → id → GET détail pour affiche + texte + bestFilmDetail.
+ */
 async function loadBestFilm() {
   const titleEl = document.getElementById('best-film-title');
   const descEl = document.getElementById('best-film-description');
   const btn = document.getElementById('best-film-details-btn');
 
-  console.log('[Meilleur film] loadBestFilm() démarré');
 
   titleEl.textContent = 'Chargement…';
   descEl.textContent = '';
@@ -203,7 +214,6 @@ async function loadBestFilm() {
     }
 
     const detailUrl = `${API_BASE}/titles/${bestSummary.id}`;
-    console.log('[Meilleur film] Détail →', detailUrl);
 
     const detailRes = await fetch(detailUrl, { headers: jsonHeaders });
     if (!detailRes.ok) {
@@ -212,7 +222,6 @@ async function loadBestFilm() {
     }
 
     bestFilmDetail = await detailRes.json();
-    console.log('[Meilleur film] OK —', bestFilmDetail.title, `(IMDB ${bestFilmDetail.imdb_score})`);
     populateBestFilm(bestFilmDetail);
   } catch (err) {
     console.error('[Meilleur film] Échec :', err);
@@ -234,6 +243,9 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
+/**
+ * Construit une carte film pour les grilles (API) : clic / Entrée / Espace ouvre le détail.
+ */
 function createFilmCardElement(m) {
   const card = document.createElement('div');
   card.className = 'film-card';
@@ -284,6 +296,7 @@ function createFilmCardElement(m) {
   return card;
 }
 
+/** Fetch le détail d’un film par id puis ouvre la modale (grilles générées en JS). */
 async function openFilmDetailModal(movieId) {
   try {
     const res = await fetch(`${API_BASE}/titles/${movieId}`, { headers: jsonHeaders });
@@ -324,8 +337,7 @@ function initStaticFilmCardModals() {
 }
 
 /**
- * @param {string} apiGenreName — ex. Comedy, Family
- * @param {HTMLElement} gridEl — conteneur .films-grid
+ * Récupère tous les genres (pagination par `next` jusqu’à la fin de liste).
  */
 async function fetchAllGenres() {
   const genres = [];
@@ -389,6 +401,9 @@ async function loadGenreSelect(selectEl) {
   }
 }
 
+/**
+ * Overlay « Chargement… » sur la grille dynamique (shell #dynamic-grid-shell) pour éviter un saut de hauteur.
+ */
 function setCategoryShellLoading(gridEl, active) {
   const shell = gridEl.closest('.category-grid-shell');
   if (!shell) return;
@@ -409,6 +424,7 @@ function setCategoryShellLoading(gridEl, active) {
   }
 }
 
+/** Associe chaque grille .films-grid--category à son bouton « Voir plus » dans le HTML. */
 function getCategoryExpandButton(gridEl) {
   if (gridEl.id === 'top-rated-grid') return document.getElementById('top-rated-expand-btn');
   if (gridEl.id === 'mystery-grid') return document.getElementById('mystery-expand-btn');
@@ -428,6 +444,7 @@ function updateCategoryExpandButton(gridEl) {
   btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
 }
 
+/** Branche chaque paire bouton / grille pour basculer .films-grid--expanded au clic. */
 function wireCategoryExpandButtons() {
   const pairs = [
     ['top-rated-expand-btn', 'top-rated-grid'],
@@ -446,7 +463,9 @@ function wireCategoryExpandButtons() {
   });
 }
 
-/** Charge les 6 films les mieux notés après le premier (évite le doublon avec « Meilleur film »). */
+/**
+ * Section « Films les mieux notés » : 7 résultats triés par note, on ignore le 1er (déjà en « Meilleur film »).
+ */
 async function loadTopRatedGrid() {
   const gridEl = document.getElementById('top-rated-grid');
   if (!gridEl) return;
@@ -498,6 +517,9 @@ async function loadTopRatedGrid() {
   }
 }
 
+/**
+ * Grille catégorie (Mystery, Famille, ou genre du select) : GET /titles/?genre=&sort_by=-imdb_score&page_size=6.
+ */
 async function loadCategoryGrid(apiGenreName, gridEl) {
   const shell = gridEl.closest('.category-grid-shell');
   const hasFilmCards = gridEl.querySelector('.film-card');
@@ -551,9 +573,12 @@ async function loadCategoryGrid(apiGenreName, gridEl) {
   }
 }
 
+// ——— Initialisation au chargement de la page ———
+
 document.addEventListener('DOMContentLoaded', () => {
   initStaticFilmCardModals();
 
+  // Clic sur le fond (overlay) : fermer la modale sans bloquer les clics à l’intérieur
   document.getElementById('modal-overlay').addEventListener('click', function (e) {
     if (e.target === this) closeModal();
   });
@@ -568,6 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const topRatedGrid = document.getElementById('top-rated-grid');
   const mysteryGrid = document.getElementById('mystery-grid');
 
+  /** Quand le select « Autres » change : met à jour le titre de section et recharge la grille. */
   function reloadDynamicCategory() {
     const apiGenre = catSelect.value;
     const titleEl = document.getElementById('dynamic-title');
@@ -596,6 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('best-film-details-btn').addEventListener('click', openBestFilmModal);
 
+  // « Voir plus / moins » : classe .films-grid--expanded sur la grille (styles dans le CSS)
   wireCategoryExpandButtons();
   if (topRatedGrid) updateCategoryExpandButton(topRatedGrid);
   if (mysteryGrid) updateCategoryExpandButton(mysteryGrid);
@@ -607,6 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (mysteryGrid) loadCategoryGrid(CATEGORY1_API_GENRE, mysteryGrid);
   if (cat2Grid) loadCategoryGrid(CATEGORY2_API_GENRE, cat2Grid);
 
+  // Genres en dernier : au premier chargement, applique Comedy si dispo puis remplit la grille « Autres »
   if (catSelect && dynamicGrid) {
     loadGenreSelect(catSelect).then(() => {
       reloadDynamicCategory();
