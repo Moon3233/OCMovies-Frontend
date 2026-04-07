@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JustStreamIt</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+  <header>
+    <img class="header-logo" src="images/juststreamit-logo.png" alt="JustStreamIt" width="160" height="40" />
+    <h1>Vidéos à la demande</h1>
+  </header>
+
+
+  <main>
+
+    <!-- ── Meilleur film ── -->
+    <section class="films-section" aria-labelledby="best-title">
+      <h2 class="section-title" id="best-title">Meilleur film</h2>
+      <div class="best-film">
+        <div class="best-film__media">
+          <img class="best-film__poster" src="images/TheBigLebowski.png" alt="Affiche du film The Big Lebowski" />
+        </div>
+        <div class="best-film__info">
+          <h2>The Big Lebowski</h2>
+          <div class="best-film__meta">
+            1998 - Comedy, Crime, Sport<br>
+            PG-13 · 117 minutes (USA / UK)<br>
+            IMDB score: 8.1/10<br>
+            Recettes au box-office: $48.2m
+          </div>
+          <p class="best-film__description">
+            Jeff "The Dude" Lebowski, mistaken for a millionaire of the same name, 
+            seeks restitution for his ruined rug and enlists his bowling buddies to help get it.
+          </p>
+          <button class="btn-red" onclick="openModal()">Détails</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Films les mieux notés ── -->
+    <section class="films-section" aria-labelledby="top-title">
+      <h2 class="section-title" id="top-title">Films les mieux notés</h2>
+      <div class="films-grid">
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Titanic">
+          <div class="film-card__media">
+            <img src="images/Titanic.png" alt="Affiche Titanic" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Titanic</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Retour vers le futur">
+          <div class="film-card__media">
+            <img src="images/RetourVersLeFutur.png" alt="Affiche Retour vers le futur" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Retour vers le futur</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Scarface">
+          <div class="film-card__media">
+            <img src="images/Scarface.png" alt="Affiche Scarface" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Scarface</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Pulp Fiction">
+          <div class="film-card__media">
+            <img src="images/PulpFiction.png" alt="Affiche Pulp Fiction" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Pulp Fiction</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Le Parrain">
+          <div class="film-card__media">
+            <img src="images/LeParrain.jpg" alt="Affiche Le Parrain" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Le Parrain</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Alien">
+          <div class="film-card__media">
+            <img src="images/Alien.png" alt="Affiche Alien" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Alien</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn-red btn-red--mobile-only">Voir plus</button>
+    </section>
+
+    <!-- ── Mystery ── -->
+    <section class="films-section" aria-labelledby="mystery-title">
+      <h2 class="section-title" id="mystery-title">Mystery</h2>
+      <div class="films-grid">
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Le Parrain">
+          <div class="film-card__media">
+            <img src="images/LeParrain.jpg" alt="Affiche Le Parrain" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Le Parrain</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Scarface">
+          <div class="film-card__media">
+            <img src="images/Scarface.png" alt="Affiche Scarface" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Scarface</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Pulp Fiction">
+          <div class="film-card__media">
+            <img src="images/PulpFiction.png" alt="Affiche Pulp Fiction" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Pulp Fiction</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Titanic">
+          <div class="film-card__media">
+            <img src="images/Titanic.png" alt="Affiche Titanic" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Titanic</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Retour vers le futur">
+          <div class="film-card__media">
+            <img src="images/RetourVersLeFutur.png" alt="Affiche Retour vers le futur" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Retour vers le futur</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="The Big Lebowski">
+          <div class="film-card__media">
+            <img src="images/TheBigLebowski.png" alt="Affiche The Big Lebowski" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">The Big Lebowski</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn-red btn-red--mobile-only">Voir moins</button>
+    </section>
+
+    <!-- Famille-->
+    <section class="films-section" aria-labelledby="cat2-title">
+      <h2 class="section-title" id="cat2-title">Famille</h2>
+      <div class="films-grid">
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Alien">
+          <div class="film-card__media">
+            <img src="images/Alien.png" alt="Affiche Alien" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Alien</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Le Parrain">
+          <div class="film-card__media">
+            <img src="images/LeParrain.jpg" alt="Affiche Le Parrain" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Le Parrain</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Pulp Fiction">
+          <div class="film-card__media">
+            <img src="images/PulpFiction.png" alt="Affiche Pulp Fiction" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Pulp Fiction</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Retour vers le futur">
+          <div class="film-card__media">
+            <img src="images/RetourVersLeFutur.png" alt="Affiche Retour vers le futur" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Retour vers le futur</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+      </div>
+      
+    </section>
+
+    <!-- ── Autres : menu déroulant ── -->
+    <section class="autres-section" aria-labelledby="autres2-label">
+      <div class="autres-dropdown-row">
+        <p class="autres-label" id="autres2-label">Autres:</p>
+        <select class="autres-select" id="cat-select" aria-label="Choisir une catégorie">
+          <option value="Comédies">Comédies</option>
+          <option value="Films d'action">Films d'action</option>
+          <option value="Famille">Famille</option>
+          <option value="Films de fantasy">Films de fantasy</option>
+          <option value="Films d'horreur">Films d'horreur</option>
+          <option value="Science-fiction">Science-fiction</option>
+          <option value="Westerns">Westerns</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- ── Section catégorie dynamique ── -->
+    <section class="films-section" aria-labelledby="dynamic-title">
+      <h2 class="section-title" id="dynamic-title">Comédies</h2>
+      <div class="films-grid" id="dynamic-grid">
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Scarface">
+          <div class="film-card__media">
+            <img src="images/Scarface.png" alt="Affiche Scarface" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Scarface</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="The Big Lebowski">
+          <div class="film-card__media">
+            <img src="images/TheBigLebowski.png" alt="Affiche The Big Lebowski" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">The Big Lebowski</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Titanic">
+          <div class="film-card__media">
+            <img src="images/Titanic.png" alt="Affiche Titanic" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Titanic</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+        <div class="film-card" onclick="openModal()" tabindex="0" role="button" aria-label="Alien">
+          <div class="film-card__media">
+            <img src="images/Alien.png" alt="Affiche Alien" loading="lazy" />
+            <div class="film-card__ribbon"><p class="film-card__title">Alien</p><button type="button" class="film-card__btn-details" onclick="event.stopPropagation(); openModal();">Détails</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-film-title">
+    <div class="modal">
+
+      <button class="modal__close" onclick="closeModal()" aria-label="Fermer la modale">✕</button>
+
+      <!-- Top : infos + affiche côte-à-côte (desktop/tablet) -->
+      <div class="modal__top">
+        <img class="modal__poster" src="images/TheBigLebowski.png" alt="Affiche du film The Big Lebowski" />
+        <div class="modal__info">
+          <h2 id="modal-film-title">The Big Lebowski</h2>
+          <div class="modal__meta">
+            1998 - Comedy, Crime, Sport<br>
+            PG-13 · 117 minutes (USA / UK)<br>
+            IMDB score: 8.1/10<br>
+            Recettes au box-office: $48.2m
+          </div>
+          <p class="modal__director-label">Réalisé par:</p>
+          <p class="modal__director-name">Joel Cohen, Ethan Cohen</p>
+        </div>
+      </div>
+
+      <!-- Synopsis -->
+      <p class="modal__description">
+        When "the dude" Lebowski is mistaken for a millionaire Lebowski, two thugs urinate on his rug to coerce him 
+        into paying a debt he knows nothing about. While attempting to gain recompense for the ruined rug from his 
+        wealthy counterpart, he accepts a one-time job with high pay-off. He enlists the help of his bowling buddy, 
+        Walter, a gun-toting Jewish-convert with anger issues. Deception leads to more trouble, and it soon seems 
+        that everyone from porn empire tycoons to nihilists want something from The Dude.
+      </p>
+
+      <!-- Casting -->
+      <p class="modal__cast-label">Avec:</p>
+      <p class="modal__cast">
+        David Huddleston, Flea, Jack Kehler, Jeff Bridges, Jimmie Dale Gilmore, John Goodman,
+        John Turturro, Julianne Moore, Mark Pellegrino, Peter Stormare, Philip Moon,
+        Philip Seymour Hoffman, Steve Buscemi, Tara Reid, Torsten Voges
+      </p>
+
+      <button class="modal__btn-close" onclick="closeModal()">Fermer</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
