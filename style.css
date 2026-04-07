@@ -1,5 +1,9 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+    --btn-radius: 1rem;
+}
+
 body {
     font-family: Arial, sans-serif;
     background: #fff;
@@ -19,6 +23,13 @@ header {
     gap: 1.25rem;
 }
 
+/* Tablette & mobile : espace sous la zone sûre / décollage du bord supérieur */
+@media (max-width: 900px) {
+    body {
+        padding-top: max(1.75rem, calc(0.75rem + env(safe-area-inset-top, 0px)));
+    }
+}
+
 .header-logo {
     height: 4.25rem;
     width: auto;
@@ -33,6 +44,31 @@ header h1 {
     font-size: 1.8rem;
     font-weight: normal;
     letter-spacing: 0.06em;
+}
+
+/* Tablette : logo + titre centrés dans le bandeau */
+@media (min-width: 581px) and (max-width: 900px) {
+    header {
+        justify-content: center;
+        gap: 1rem;
+        padding-inline: 1.25rem;
+    }
+
+    header h1 {
+        text-align: center;
+    }
+}
+
+/* Mobile : logo seul, centré */
+@media (max-width: 580px) {
+    header {
+        justify-content: center;
+        padding-inline: 1rem;
+    }
+
+    header h1 {
+        display: none;
+    }
 }
 
 /* ── MAIN LAYOUT ── */
@@ -52,18 +88,18 @@ main {
 
 /* ── MEILLEUR FILM (hero card) ── */
 .best-film {
-    border: 1px solid #ccc;
+    border: 0.35rem solid #000;
     margin-bottom: 2rem;
     display: flex;
     gap: 1rem;
     padding: 0.75rem;
-    align-items: flex-start;
+    align-items: stretch;
 }
 
 .best-film__media {
     position: relative;
     flex-shrink: 0;
-    width: clamp(12rem, 32vw, 15.5rem);
+    width: clamp(9rem, 22vw, 11.5rem);
     aspect-ratio: 2 / 3;
     overflow: hidden;
     background: #bbb;
@@ -76,36 +112,75 @@ main {
     display: block;
 }
 
-.best-film__info h2 {
-    font-size: 1rem;
-    font-weight: bold;
-    margin-bottom: 0.3rem;
+.best-film__info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    gap: clamp(0.45rem, 1.1vw, 0.65rem);
 }
 
-.best-film__meta {
-    font-size: 0.8rem;
-    color: #444;
-    line-height: 1.7;
-    margin-bottom: 0.5rem;
+.best-film__info h2 {
+    font-size: clamp(1.15rem, 2.8vw, 1.65rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #0a0a0a;
+    margin-bottom: 0;
 }
 
 .best-film__description {
-    font-size: 0.8rem;
-    color: #333;
+    font-size: clamp(0.82rem, 1.85vw, 0.98rem);
+    color: #222;
     line-height: 1.5;
-    margin-bottom: 0.75rem;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.best-film__details-btn {
+    align-self: flex-end;
+    margin-top: auto;
 }
 
 .btn-red {
     display: inline-block;
     background: #e50914;
     color: #fff;
-    padding: 0.4rem 1.2rem;
+    padding: 0.45rem 1.35rem;
     font-size: 0.8rem;
     font-weight: bold;
     border: none;
+    border-radius: var(--btn-radius);
     cursor: pointer;
     text-decoration: none;
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.btn-red:hover {
+    background: #c50812;
+}
+
+.btn-red:focus-visible {
+    outline: 2px solid #111;
+    outline-offset: 2px;
+}
+
+.btn-red:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-red:disabled:hover {
+    background: #e50914;
+}
+
+/* Meilleur film — bouton Détails : sur desktop, plus de padding et angles moins arrondis */
+@media (min-width: 901px) {
+    .best-film__details-btn.btn-red {
+        padding: 0.72rem 2.15rem;
+        border-radius: 0.38rem;
+    }
 }
 
 .btn-red--mobile-only {
@@ -122,6 +197,74 @@ main {
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin-bottom: 0.75rem;
+}
+
+/* Grilles catégorie : desktop 3×2 (6 films) ; tablette 2×3 sauf « mieux notés » = 4 + Voir plus ; mobile 1 col, 2 visibles + « Voir plus » */
+.btn-category-expand {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .films-grid--category {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tablette : section « Films les mieux notés » uniquement — 4 films (2×2), masquer 5–6 jusqu’à « Voir plus » */
+@media (min-width: 581px) and (max-width: 900px) {
+    #top-rated-grid.films-grid--category:not(.films-grid--expanded) .film-card:nth-child(n + 5) {
+        display: none;
+    }
+
+    #top-rated-expand-btn {
+        display: inline-block;
+    }
+
+    #top-rated-expand-btn.btn-category-expand--inactive {
+        display: none;
+    }
+}
+
+.films-grid__msg {
+    grid-column: 1 / -1;
+    font-size: 0.9rem;
+    color: #555;
+    margin: 0;
+    padding: 0.5rem 0;
+}
+
+/* Grille catégorie dynamique : pas de saut de hauteur au changement de genre */
+.category-grid-shell {
+    position: relative;
+}
+
+.category-grid-shell .films-grid {
+    transition: opacity 0.22s ease;
+}
+
+.category-grid-shell.is-loading .films-grid {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.category-grid__loading-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.category-grid__loading-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    padding: 0.45rem 1rem;
+    background: rgba(255, 255, 255, 0.94);
+    border-radius: 0.35rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .film-card {
@@ -145,13 +288,32 @@ main {
     display: block;
 }
 
+/* Remplacement si l’URL d’affiche est morte (404, etc.) */
+.poster-fallback {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 0.65rem;
+    background: linear-gradient(160deg, #dedede 0%, #b5b5b5 100%);
+    color: #2a2a2a;
+    font-size: clamp(0.58rem, 2vw, 0.8rem);
+    line-height: 1.45;
+    font-weight: 600;
+    white-space: pre-line;
+}
+
 /* Bande : 20 % de la hauteur au centre de l’affiche (hors meilleur film) */
 .film-card__ribbon {
     position: absolute;
     left: 0;
     right: 0;
     top: 20%;
-    height: 20%;
+    height: 25%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -172,13 +334,12 @@ main {
 .film-card__title {
     align-self: flex-start;
     max-width: 100%;
-    font-size: clamp(0.78rem, 2.6vw, 1.1rem);
+    font-size: clamp(0.78rem, 2.2vw, 1.1rem);
     font-weight: 700;
     color: #fff;
     line-height: 1.2;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
 }
 
@@ -226,7 +387,7 @@ main {
 
 .autres-label {
     font-weight: bold;
-    margin-bottom: 0.5rem;
+    margin: 0 0 0.5rem 0;
     font-size: 0.9rem;
 }
 
@@ -253,10 +414,11 @@ main {
     inset: 0;
     background: rgba(0,0,0,0.55);
     z-index: 200;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    padding: 2rem 1rem;
+    padding: max(1rem, env(safe-area-inset-top, 0px)) 1rem max(1rem, env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .modal-overlay.open {
@@ -265,42 +427,72 @@ main {
 
 .modal {
     background: #fff;
-    border: 1px solid #ccc;
+    border: 0.35rem solid #000;
     width: 100%;
     max-width: 680px;
+    max-height: min(92vh, calc(100dvh - 2rem));
+    overflow-y: auto;
     padding: 1.25rem 1.5rem;
     position: relative;
-}
-
-.modal__close {
-    position: absolute;
-    top: 0.6rem;
-    right: 0.75rem;
-    background: none;
-    border: none;
-    font-size: 1.1rem;
-    cursor: pointer;
-    color: #e50914;
-    font-weight: bold;
-    line-height: 1;
-}
-
-.modal__top {
-    display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.modal__poster {
-    width: 140px;
+    margin: auto;
     flex-shrink: 0;
-    aspect-ratio: 1 / 1.1;
-    background: #bbb;
-    object-fit: cover;
-    display: block;
+    box-sizing: border-box;
 }
 
-.modal__info h2 {
+/* Croix de fermeture : tablette & mobile uniquement (desktop : bouton « Fermer » + clic sur l’overlay) */
+.modal__close {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    /* Croix rouge seule, sans disque ni ombre */
+    .modal__close {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2rem;
+        min-height: 2rem;
+        padding: 0.2rem;
+        margin: 0;
+        background: transparent;
+        color: #e50914;
+        border: none;
+        border-radius: 0;
+        font-size: 1.65rem;
+        font-weight: 300;
+        line-height: 1;
+        cursor: pointer;
+        transition: color 0.15s ease, opacity 0.15s ease;
+    }
+
+    .modal__close:hover {
+        color: #b8070f;
+    }
+
+    .modal__close:focus-visible {
+        outline: 2px solid #111;
+        outline-offset: 2px;
+    }
+}
+
+/* Colonne : titre → méta → réalisateurs → synopsis → affiche → casting */
+.modal__layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.modal__intro {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.modal__intro h2 {
     font-size: 1.15rem;
     font-weight: bold;
     margin-bottom: 0.4rem;
@@ -313,21 +505,49 @@ main {
     margin-bottom: 0.5rem;
 }
 
+.modal__director-block {
+    margin-top: 0.75rem;
+}
+
 .modal__director-label {
     font-size: 0.82rem;
     font-weight: bold;
-    margin-top: 0.75rem;
+    margin: 0 0 0.2rem 0;
 }
 
 .modal__director-name {
     font-size: 0.82rem;
+    margin: 0;
 }
 
 .modal__description {
     font-size: 0.82rem;
     line-height: 1.6;
-    margin-bottom: 1rem;
+    margin: 0.75rem 0 0 0;
     color: #333;
+}
+
+.modal__poster-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 14rem;
+    margin-inline: auto;
+    aspect-ratio: 1 / 1.1;
+    overflow: hidden;
+    background: #bbb;
+}
+
+.modal__poster-wrap .modal__poster {
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.modal__cast-block {
+    margin-top: 0;
 }
 
 .modal__cast-label {
@@ -340,6 +560,35 @@ main {
     font-size: 0.8rem;
     color: #444;
     line-height: 1.5;
+    margin: 0;
+}
+
+/* Desktop : texte (titre… synopsis) à gauche, affiche en haut à droite ; casting sous les deux colonnes */
+@media (min-width: 901px) {
+    .modal__layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) clamp(9rem, 26%, 11.75rem);
+        gap: 1rem 1.25rem;
+        align-items: start;
+    }
+
+    .modal__intro {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .modal__poster-wrap {
+        grid-column: 2;
+        grid-row: 1;
+        width: 100%;
+        max-width: none;
+        margin-inline: 0;
+    }
+
+    .modal__cast-block {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
 }
 
 .modal__btn-close {
@@ -348,14 +597,44 @@ main {
     background: #e50914;
     color: #fff;
     border: none;
-    padding: 0.5rem 2rem;
+    border-radius: var(--btn-radius);
+    padding: 0.55rem 2rem;
     font-size: 0.9rem;
     font-weight: bold;
     cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.modal__btn-close:hover {
+    background: #c50812;
+}
+
+.modal__btn-close:focus-visible {
+    outline: 2px solid #111;
+    outline-offset: 2px;
 }
 
 /* ── RESPONSIVE — Mobile (≤ 580px) ── */
 @media (max-width: 580px) {
+    .section-title {
+        font-size: 1.35rem;
+        text-align: center;
+        margin-bottom: 0.85rem;
+        line-height: 1.25;
+    }
+
+    .autres-section .autres-dropdown-row {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .autres-label {
+        font-size: 1.35rem;
+        text-align: center;
+        width: 100%;
+    }
+
     .btn-red--mobile-only {
     display: inline-block;
     }
@@ -364,24 +643,38 @@ main {
     grid-template-columns: repeat(2, 1fr);
     }
 
+    /* Grilles catégorie + « Films les mieux notés » : 1 film par ligne, 2 visibles puis « Voir plus » */
+    .films-grid.films-grid--category {
+    grid-template-columns: 1fr;
+    }
+
+    .films-grid--category:not(.films-grid--expanded) .film-card:nth-child(n + 3) {
+    display: none;
+    }
+
+    /* Mystery : même logique que les autres catégories — « Voir plus » puis « Voir moins » (updateCategoryExpandButton) */
+
+    .btn-category-expand {
+    display: inline-block;
+    }
+
+    .btn-category-expand.btn-category-expand--inactive {
+    display: none;
+    }
+
     .best-film {
     flex-direction: column;
     }
 
     .best-film__media {
     width: 100%;
-    max-width: 18rem;
+    max-width: 13.5rem;
     margin: 0 auto;
     aspect-ratio: 2 / 3;
     }
 
-    .modal__top {
-    flex-direction: column;
-    }
-
-    .modal__poster {
-    width: 100%;
-    aspect-ratio: 1 / 1.1;
+    .modal__poster-wrap {
+    max-width: 16rem;
     }
 
     .autres-select {
